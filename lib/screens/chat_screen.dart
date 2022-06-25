@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../models/message_data.dart';
+import 'package:flutter_onlypants_h4_signalr_test/mock/mock_data.dart';
+import 'package:flutter_onlypants_h4_signalr_test/utils/signalr_connection.dart';
+import '../models/models.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({
@@ -21,51 +23,46 @@ class ChatScreen extends StatelessWidget {
         ),
       ),
       body: Column(
-        children: const [
+        children: [
           Expanded(
             child: _DemoMessageList(),
           ),
-          _ActionBar(),
+          const _ActionBar(),
         ],
       ),
     );
   }
 }
 
-
 class _DemoMessageList extends StatelessWidget {
-  const _DemoMessageList({Key? key}) : super(key: key);
+  _DemoMessageList({Key? key}) : super(key: key);
+
+  final List<MessageTile> messages = MokeData().messages;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
       child: ListView(
-        children: const [
-          _DateLable(lable: 'Yesterday'),
+        children: [
+          const _DateLable(lable: 'Yesterday'),
           _MessageTile(
-            message: 'Hi, lucy H I Y D G',
-            messageDate: '12:01 PM',
+            messageTile: messages[0],
           ),
           _MessageOwnTile(
-            message: 'Y K H I G...',
-            messageDate: '12:02 PM',
+            messageTile: messages[1],
           ),
           _MessageTile(
-            message: 'D Y W S',
-            messageDate: '12:02 PM',
+            messageTile: messages[2],
           ),
           _MessageOwnTile(
-            message: 'W B A !',
-            messageDate: '12:03 PM',
+            messageTile: messages[3],
           ),
           _MessageTile(
-            message: 'C U !',
-            messageDate: '12:03 PM',
+            messageTile: messages[4],
           ),
           _MessageOwnTile(
-            message: 'Y !!!',
-            messageDate: '12:03 PM',
+            messageTile: messages[5],
           ),
         ],
       ),
@@ -73,18 +70,15 @@ class _DemoMessageList extends StatelessWidget {
   }
 }
 
+const _borderRadius = 26.0;
+
 class _MessageTile extends StatelessWidget {
   const _MessageTile({
     Key? key,
-    required this.message,
-    required this.messageDate,
+    required this.messageTile,
   }) : super(key: key);
 
-  final String message;
-  final String messageDate;
-
-  static const _borderRadius = 26.0;
-
+  final MessageTile messageTile;
 
   @override
   Widget build(BuildContext context) {
@@ -96,32 +90,17 @@ class _MessageTile extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-
-              color: Colors.blue[200], // diff
-              borderRadius: const BorderRadius.only( 
-                topLeft: Radius.circular(_borderRadius), // diff
-                topRight: Radius.circular(_borderRadius),// diff
-                bottomRight: Radius.circular(_borderRadius),// diff
-
+              color: Colors.blue[200],
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(_borderRadius),
+                topRight: Radius.circular(_borderRadius),
+                bottomRight: Radius.circular(_borderRadius),
               ),
             ),
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20),
-              child: Text(message),
-            ),
+            child: _TextPaddingMessageTile(
+                messageTile.message, const Color.fromARGB(255, 72, 72, 72)),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Text(
-              messageDate,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          )
+          _DatePaddingMessageTile(messageTile.messageDate)
         ],
       ),
     );
@@ -129,125 +108,64 @@ class _MessageTile extends StatelessWidget {
 }
 
 class _MessageOwnTile extends StatelessWidget {
-  const _MessageOwnTile({
+  _MessageOwnTile({
     Key? key,
-    required this.message,
-    required this.messageDate,
+    required this.messageTile,
   }) : super(key: key);
 
-  final String message;
-  final String messageDate;
-
-  static const _borderRadius = 26.0;
-
+  final MessageTile messageTile;
 
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerRight,
+      alignment: Alignment.centerRight, // diff
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end, // diff
         children: [
           Container(
             decoration: const BoxDecoration(
-
-              color: Colors.blue,// diff
+              color: Colors.blue, // diff
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(_borderRadius),// diff
-                bottomRight: Radius.circular(_borderRadius),// diff
-                bottomLeft: Radius.circular(_borderRadius),// diff
-                
+                topLeft: Radius.circular(_borderRadius), // diff
+                bottomRight: Radius.circular(_borderRadius), // diff
+                bottomLeft: Radius.circular(_borderRadius), // diff
               ),
             ),
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20),
-              child: Text(
-                message,
-                style: const TextStyle(
-                  color: Color.fromARGB(255, 255, 255, 255),
-                ),
-              ),
-            ),
+            child: _TextPaddingMessageTile(messageTile.message, Colors.white),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Text(
-              messageDate,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          )
+          _DatePaddingMessageTile(messageTile.messageDate)
         ],
       ),
     );
   }
 }
 
-class _BaseMessageTile extends StatelessWidget {
-  const _BaseMessageTile({
-    Key? key,
-    required this.message,
-    required this.messageDate,
-  }) : super(key: key);
-
-  final String message;
-  final String messageDate;
-
-  static const _borderRadius = 26.0;
-
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(_borderRadius),
-                bottomRight: Radius.circular(_borderRadius),
-                bottomLeft: Radius.circular(_borderRadius),
-              ),
-            ),
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20),
-              child: Text(
-                message,
-                style: const TextStyle(
-                  color: Color.fromARGB(255, 255, 255, 255),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Text(
-              messageDate,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          )
-        ],
+Padding _TextPaddingMessageTile(String message, Color color) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20),
+    child: Text(
+      message,
+      style: TextStyle(
+        color: color,
       ),
-    );
-  }
+    ),
+  );
 }
 
+Padding _DatePaddingMessageTile(String messageDate) {
+  return Padding(
+    padding: const EdgeInsets.only(top: 8.0),
+    child: Text(
+      messageDate,
+      style: const TextStyle(
+        color: Colors.grey,
+        fontSize: 10,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  );
+}
 
 class _DateLable extends StatelessWidget {
   const _DateLable({
@@ -363,6 +281,8 @@ class _ActionBar extends StatelessWidget {
               child: const Text("Click"),
               onPressed: () {
                 print('TODO: send a message');
+                final s = SignalrConnection();
+                s.Connection();
               },
             ),
           ),
