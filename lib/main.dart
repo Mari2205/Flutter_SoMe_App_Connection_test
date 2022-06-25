@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_onlypants_h4_signalr_test/screens/screens.dart';
+import 'models/message_data.dart';
 
 void main() => runApp(const MyApp());
 
@@ -8,28 +10,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: SafeArea(
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                flex: 2,
-                child: Container(
-                  color: Colors.blue.shade900,
-                  child: const TextField(
-                    // textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14),
-                    decoration: InputDecoration(
-                      hintText: 'type something...',
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+      home: ChatScreen(
+        messageData: MessageData(
+          senderName: 'me',
+          message: 'hert',
+          messageDate: DateTime.now(),
+          dateMessage: 'epkf',
+          profilePicture: 'efe',
         ),
       ),
     );
