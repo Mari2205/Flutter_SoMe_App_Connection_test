@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_onlypants_h4_signalr_test/utils/stream_signalr_con_test.dart';
 import '../mock/mock_data.dart';
 import '../utils/utils.dart';
 import '../models/models.dart';
@@ -279,15 +280,23 @@ class _ActionBar extends StatelessWidget {
                 primary: Colors.indigo,
               ),
               child: const Text("Click"),
-              onPressed: () {
-                print('TODO send messages');
-                final data = SignalrConnection();
-                data.Connection();
-              },
+              // onPressed: () {
+              //   print('TODO send messages');
+              //   final data = SignalrConnection();
+              //   data.SendMessage('test', 'message');
+              //   data.ReceiveMessage();
+              // },
               // onPressed: () => Navigator.push(
               //   context,
               //   MaterialPageRoute<void>(
-              //     builder: (context) => StreamConnection(),),)
+              //     builder: (context) => StreamSignalr(),),)
+              onPressed: () async {
+                print('TODO send messages');
+                final data = SignalrConnection();
+                await data.connection.start();
+                data.SendMessage('test', 'message');
+                // data.ReceiveMessage();
+              },
             ),
           ),
         ],
