@@ -21,12 +21,13 @@ class SignalrConnection {
   // }
 
   late HubConnection connection;
-  static const String url = 'http://10.0.2.2:5238/chathub'; // https | ws | wss
+  static const String url_http = 'http://10.0.2.2:5238/chathub'; // https | ws | wss
+  static const String url_https = 'https://10.0.2.2:7238/chathub'; // https | ws | wss
 
   SignalrConnection() {
     connection = HubConnectionBuilder()
         .withUrl(
-            url,
+            url_http,
             HttpConnectionOptions(
                 logging: (level, message) =>
                     print('test message ${message.toString()}')))

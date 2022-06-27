@@ -26,7 +26,7 @@ class ChatScreen extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: _DemoMessageList(),
+            child: _MessageList(),
           ),
           const _ActionBar(),
         ],
@@ -66,6 +66,58 @@ class _DemoMessageList extends StatelessWidget {
             messageTile: messages[5],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _MessageList extends StatelessWidget {
+  _MessageList({Key? key}) : super(key: key);
+
+  final List<MessageTile> messages = MokeData().messages;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+      child: ListView.separated(
+        itemCount: messages.length + 1,
+
+              separatorBuilder: (context, index) {
+          // if (index == messages.length - 1) {
+          //   return _DateLable(dateTime: messages[index].createdAt);
+          // }
+          if (messages.length == 1) {
+            return const SizedBox.shrink();
+          } 
+          else if (index >= messages.length - 1) {
+            return const SizedBox.shrink();
+          } 
+          else if (index <= messages.length) {
+            final message = messages[index];
+            final nextMessage = messages[index + 1];
+            // if (!Jiffy(message.createdAt.toLocal())
+            //     .isSame(nextMessage.createdAt.toLocal(), Units.DAY)) {
+            //   return _DateLable(
+            //     dateTime: message.createdAt,
+            //   );
+            // } else {
+              return const SizedBox.shrink();
+            // }
+          } 
+          else {
+            return const SizedBox.shrink();
+          } 
+        },
+
+        itemBuilder: (context, index) {
+          if (index < messages.length) {
+            final message = messages[index];
+            return _MessageOwnTile(messageTile: message);
+          } else {
+            return const SizedBox.shrink();
+          }
+        },
       ),
     );
   }
