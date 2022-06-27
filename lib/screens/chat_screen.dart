@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_onlypants_h4_signalr_test/mock/mock_data.dart';
-import 'package:flutter_onlypants_h4_signalr_test/utils/signalr_connection.dart';
+import '../mock/mock_data.dart';
+import '../utils/utils.dart';
 import '../models/models.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -280,10 +280,14 @@ class _ActionBar extends StatelessWidget {
               ),
               child: const Text("Click"),
               onPressed: () {
-                print('TODO: send a message');
-                final s = SignalrConnection();
-                s.Connection();
+                print('TODO send messages');
+                final data = SignalrConnection();
+                data.Connection();
               },
+              // onPressed: () => Navigator.push(
+              //   context,
+              //   MaterialPageRoute<void>(
+              //     builder: (context) => StreamConnection(),),)
             ),
           ),
         ],

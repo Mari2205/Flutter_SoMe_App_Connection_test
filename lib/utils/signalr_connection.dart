@@ -4,7 +4,7 @@ class SignalrConnection {
   Future Connection() async {
     final connection = HubConnectionBuilder()
         .withUrl(
-            'http://10.0.2.2:5238/chathub',
+            'ws://10.0.2.2:5238/chathub',
             HttpConnectionOptions(
               logging: (level, message) =>
                   print('Test message ${message.toString()}'),
