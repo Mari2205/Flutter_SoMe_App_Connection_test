@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_onlypants_h4_signalr_test/utils/stream_signalr_con_test.dart';
+import '../utils/stream_signalr_con_test.dart';
 import '../mock/mock_data.dart';
 import '../utils/utils.dart';
 import '../models/models.dart';
@@ -107,9 +106,9 @@ class _MessageListState extends State<_MessageList> {
   void myState(String message) {
     setState(() {
       print('Stream message is ${message.toString()}');
-      messages
-          .add(MessageTile(message: message.toString(), messageDate: 'debug'));
-      final f = '';
+      messages.add(
+        MessageTile(message: message.toString(), messageDate: 'debug'),
+      );
     });
   }
 
@@ -364,29 +363,24 @@ class _ActionBar extends StatelessWidget {
                 primary: Colors.indigo,
               ),
               child: const Text("Click"),
-              // onPressed: () {
-              //   print('TODO send messages');
-              //   final data = SignalrConnection();
-              //   data.SendMessage('test', 'message');
-              //   data.ReceiveMessage();
-              // },
-              // onPressed: () => Navigator.push(
-              //   context,
-              //   MaterialPageRoute<void>(
-              //     builder: (context) => StreamSignalr(),),)
               onPressed: () async {
                 print('TODO send messages');
                 final data = SignalrConnection();
-                // await data.connection.start();
+                // await data.StartConnectionHttps();
                 await data.StartConnection();
+
                 data.SendMessage('test', 'message');
+
                 // data.ReceiveMessage();
-                data.connection.on('ReceiveMessage', (message) {
-                  print('Receive message is : ${message.toString()}');
-                  streamController.add(message.toString());
-                  // messages.add(MessageTile(
-                  //     message: message.toString(), messageDate: 'debug'));
-                  // print('messages length: ${messages.length}');
+                data.connection.on('ReceiveMessage', (receivedData) {
+                  print('Receive message is : ${receivedData.toString()}');
+                  streamController.add(receivedData.toString());
+
+                  if (receivedData!.isNotEmpty) {
+                    String senderName = receivedData[0].toString();
+                    String message = receivedData[1].toString();
+                    //TODO: pase to data type
+                  }
                 });
               },
             ),
