@@ -37,12 +37,13 @@ class SignalrConnection {
     // _StartConnection();
   }
 
-  Future _StartConnection() async {
+  Future StartConnection() async {
     await connection.start();
   }
 
   Future ReceiveMessage() async {
     connection.on('ReceiveMessage', (message) {
+      
       print('Receive message is : ${message.toString()}');
     });
   }

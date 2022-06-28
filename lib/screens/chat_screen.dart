@@ -1,9 +1,17 @@
+import 'dart:async';
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_onlypants_h4_signalr_test/utils/stream_signalr_con_test.dart';
 import '../mock/mock_data.dart';
 import '../utils/utils.dart';
 import '../models/models.dart';
+
+/// stream controller:
+/// https://www.youtube.com/watch?v=jRwyP0CMxJg
+
+StreamController<String> streamController = StreamController<String>();
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({
@@ -26,7 +34,7 @@ class ChatScreen extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: _MessageList(),
+            child: _MessageList(stream: streamController.stream),
           ),
           const _ActionBar(),
         ],
@@ -71,10 +79,39 @@ class _DemoMessageList extends StatelessWidget {
   }
 }
 
-class _MessageList extends StatelessWidget {
-  _MessageList({Key? key}) : super(key: key);
+// final List<MessageTile> messages = MokeData().messages;
 
+class _MessageList extends StatefulWidget {
+  _MessageList({
+    Key? key,
+    required this.stream,
+  }) : super(key: key);
+
+  final Stream<String> stream;
+
+  @override
+  State<_MessageList> createState() => _MessageListState();
+}
+
+class _MessageListState extends State<_MessageList> {
   final List<MessageTile> messages = MokeData().messages;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.stream.listen((message) {
+      myState(message);
+    });
+  }
+
+  void myState(String message) {
+    setState(() {
+      print('Stream message is ${message.toString()}');
+      messages
+          .add(MessageTile(message: message.toString(), messageDate: 'debug'));
+      final f = '';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,18 +119,15 @@ class _MessageList extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
       child: ListView.separated(
         itemCount: messages.length + 1,
-
-              separatorBuilder: (context, index) {
+        separatorBuilder: (context, index) {
           // if (index == messages.length - 1) {
           //   return _DateLable(dateTime: messages[index].createdAt);
           // }
           if (messages.length == 1) {
             return const SizedBox.shrink();
-          } 
-          else if (index >= messages.length - 1) {
+          } else if (index >= messages.length - 1) {
             return const SizedBox.shrink();
-          } 
-          else if (index <= messages.length) {
+          } else if (index <= messages.length) {
             final message = messages[index];
             final nextMessage = messages[index + 1];
             // if (!Jiffy(message.createdAt.toLocal())
@@ -102,14 +136,12 @@ class _MessageList extends StatelessWidget {
             //     dateTime: message.createdAt,
             //   );
             // } else {
-              return const SizedBox.shrink();
-            // }
-          } 
-          else {
             return const SizedBox.shrink();
-          } 
+            // }
+          } else {
+            return const SizedBox.shrink();
+          }
         },
-
         itemBuilder: (context, index) {
           if (index < messages.length) {
             final message = messages[index];
@@ -345,9 +377,17 @@ class _ActionBar extends StatelessWidget {
               onPressed: () async {
                 print('TODO send messages');
                 final data = SignalrConnection();
-                await data.connection.start();
+                // await data.connection.start();
+                await data.StartConnection();
                 data.SendMessage('test', 'message');
                 // data.ReceiveMessage();
+                data.connection.on('ReceiveMessage', (message) {
+                  print('Receive message is : ${message.toString()}');
+                  streamController.add(message.toString());
+                  // messages.add(MessageTile(
+                  //     message: message.toString(), messageDate: 'debug'));
+                  // print('messages length: ${messages.length}');
+                });
               },
             ),
           ),
