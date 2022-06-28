@@ -368,29 +368,33 @@ class _ActionBar extends StatelessWidget {
                 print('TODO send messages');
 
                 final aes = Encryption();
-                final encrypted = aes.Encrypt('test message');
-                final decrypted = aes.Decrypt(encrypted);
+                // final encrypted = aes.Encrypt('test message');
+                // final decrypted = aes.Decrypt(encrypted);
 
-                print('Encrypted message: $encrypted');
-                print('Decrypted message: $decrypted');
-
-
+                // print('Encrypted message: $encrypted');
+                // print('Decrypted message: $decrypted');
 
                 final data = SignalrConnection();
                 // await data.StartConnectionHttps();
                 await data.StartConnection();
 
-                data.SendMessage('test', 'message');
+                final encrypted = aes.Encrypt('test message');
+                print('Encrypted message: $encrypted');
+                data.SendMessage('test', encrypted);
 
                 // data.ReceiveMessage();
                 data.connection.on('ReceiveMessage', (receivedData) {
                   print('Receive message is : ${receivedData.toString()}');
-                  streamController.add(receivedData.toString());
+
+                  // streamController.add(receivedData.toString());
 
                   if (receivedData!.isNotEmpty) {
                     String senderName = receivedData[0].toString();
                     String message = receivedData[1].toString();
                     //TODO: pase to data type
+                    final decrypted = aes.Decrypt(message);
+                    print('Decrypted message: $decrypted');
+                    streamController.add(decrypted.toString());
                   }
                 });
               },
