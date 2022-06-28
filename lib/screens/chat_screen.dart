@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ffi';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../utils/encryption.dart';
 import '../utils/stream_signalr_con_test.dart';
 import '../mock/mock_data.dart';
 import '../utils/utils.dart';
@@ -365,6 +366,16 @@ class _ActionBar extends StatelessWidget {
               child: const Text("Click"),
               onPressed: () async {
                 print('TODO send messages');
+
+                final aes = Encryption();
+                final encrypted = aes.Encrypt('test message');
+                final decrypted = aes.Decrypt(encrypted);
+
+                print('Encrypted message: $encrypted');
+                print('Decrypted message: $decrypted');
+
+
+
                 final data = SignalrConnection();
                 // await data.StartConnectionHttps();
                 await data.StartConnection();
